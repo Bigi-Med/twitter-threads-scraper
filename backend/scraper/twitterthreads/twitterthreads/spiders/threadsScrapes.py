@@ -9,30 +9,17 @@ from selenium.webdriver.support import expected_conditions as EC
 
 class ThreadsScraper(scrapy.Spider):
     name = 'ThreadsScraper'
-    start_urls = ["https://www.threads.net/@hormozi"]
+    start_urls = ["https://www.threads.net/@garyvee"]
 
     def __init__(self):
         chrome_options = webdriver.ChromeOptions()
         # Uncomment for headless mode
-        # chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--headless')
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--disable-dev-shm-usage')
         self.driver = webdriver.Chrome(options=chrome_options)
 
     def parse_thread(self,data ):
-        # """Parse Twitter tweet JSON dataset for the most important fields"""
-        # result = jmespath.search(
-        #     """{
-        #     text: post.caption.text,
-        #     id: post.id,
-        #     pk: post.pk,
-        #     code: post.code,
-        #     username: post.user.username,
-        #     has_audio: post.has_audio,
-        #     reply_count: view_replies_cta_string,
-        #     like_count: post.like_count,
-        # }""",
-        #     data,
         text = jmespath.search('post.caption.text', data)
         id = jmespath.search('post.id', data)
         pk = jmespath.search('post.pk', data)
