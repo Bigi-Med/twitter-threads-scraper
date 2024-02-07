@@ -17,7 +17,13 @@ def index():
     profile = request.args.get('profile')
     print("Executing spider .....")
     subprocess.run(['scrapy','crawl','ThreadsScraper','-o',output_file_path,'-a','profile='+profile],cwd = scrapy_project_path)
-    return 'sent'
+
+    with open(output_file_path, 'r', encoding='utf-8') as json_file:
+        data = json.load(json_file)
+    
+    print(data)
+    
+    return data
 
 if __name__ == '__main__': 
     app.run(host='0.0.0.0') 
