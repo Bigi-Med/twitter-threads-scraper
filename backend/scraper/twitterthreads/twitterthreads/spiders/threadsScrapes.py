@@ -10,15 +10,6 @@ from selenium.webdriver.support import expected_conditions as EC
 
 class ThreadsScraper(scrapy.Spider):
     name = 'ThreadsScraper'
-    # start_urls=["https://www.threads.net/@hormozi"]
-    # def __init__(self,*args,**kwargs):
-    #     super(ThreadsScraper, self).__init__(*args, **kwargs)       
-    #     chrome_options = webdriver.ChromeOptions()
-    #     # Uncomment for headless mode
-    #     chrome_options.add_argument('--headless')
-    #     chrome_options.add_argument('--no-sandbox')
-    #     chrome_options.add_argument('--disable-dev-shm-usage')
-    #     self.driver = webdriver.Chrome(options=chrome_options)
 
     def start_requests(self):
         profile = getattr(self,'profile',None)
@@ -61,9 +52,7 @@ class ThreadsScraper(scrapy.Spider):
                 # use our jmespath parser to reduce the dataset to the most important fields
                 threads = [self.parse_thread(t) for thread in thread_items for t in thread]
                 return {
-                    # the first parsed thread is the main post:
                     "thread": threads,
-                    # other threads are replies:
                 }
             raise ValueError("could not find thread data in page")
 

@@ -5,9 +5,14 @@ const URL = "http://localhost:5000/?profile="
 export default function Home() {
 
   const getThreads = async (profile) => {
-    const fullUrl = URL + profile
-    const response = await fetch(fullUrl)
-    console.log(response);
+    if(profile === ''){
+      console.log("You must choose a profile to scrape")
+    } else{
+      console.log("getting threads")
+      const fullUrl = URL + profile
+      const response = await fetch(fullUrl)
+      console.log(response);
+    }
   }
 
   const [profile, setProfile] = useState('')
