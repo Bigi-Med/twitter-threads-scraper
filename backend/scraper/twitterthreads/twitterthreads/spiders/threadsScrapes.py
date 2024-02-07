@@ -1,4 +1,5 @@
 import scrapy
+import time
 from nested_lookup import nested_lookup
 import json
 import  jmespath
@@ -9,49 +10,39 @@ from selenium.webdriver.support import expected_conditions as EC
 
 class ThreadsScraper(scrapy.Spider):
     name = 'ThreadsScraper'
-    start_urls = ["https://www.threads.net/@garyvee"]
+    # start_urls=["https://www.threads.net/@hormozi"]
+    # def __init__(self,*args,**kwargs):
+    #     super(ThreadsScraper, self).__init__(*args, **kwargs)       
+    #     chrome_options = webdriver.ChromeOptions()
+    #     # Uncomment for headless mode
+    #     chrome_options.add_argument('--headless')
+    #     chrome_options.add_argument('--no-sandbox')
+    #     chrome_options.add_argument('--disable-dev-shm-usage')
+    #     self.driver = webdriver.Chrome(options=chrome_options)
 
-    def __init__(self):
-        chrome_options = webdriver.ChromeOptions()
-        # Uncomment for headless mode
-        chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--disable-dev-shm-usage')
-        self.driver = webdriver.Chrome(options=chrome_options)
+    def start_requests(self):
+        profile = getattr(self,'profile',None)
+        url=f'https://www.threads.net/{profile}'
+        yield scrapy.Request(url, callback=self.parse_account)
 
     def parse_thread(self,data ):
         text = jmespath.search('post.caption.text', data)
-        id = jmespath.search('post.id', data)
-        pk = jmespath.search('post.pk', data)
-        code = jmespath.search('post.code', data)
         username = jmespath.search('post.user.username', data)
-        has_audio = jmespath.search('post.has_audio', data)
-        reply_count = jmespath.search('view_replies_cta_string', data)
-        like_count = jmespath.search('post.like_count', data)
 
         # Construct the result object
         result = {
             'text': text,
-            'id': id,
-            'pk': pk,
-            'code': code,
             'username': username,
-            'has_audio': has_audio,
-            'reply_count': reply_count,
-            'like_count': like_count,
         }
-        if result["reply_count"] and type(result["reply_count"]) != int:
-            result["reply_count"] = int(result["reply_count"].split(" ")[0])
-        result[
-            "url"
-        ] = f"https://www.threads.net/@{result['username']}/post/{result['code']}"
         return result
 
     def parse(self, response):
         self.driver.get(response.url)
-
+        page_source = self.driver.page_source
+        new_response = scrapy.http.HtmlResponse(url=self.driver.current_url, body=page_source, encoding='utf-8')
         yield scrapy.Request(self.driver.current_url,callback=self.parse_account)
         self.driver.quit()
+
 
     def parse_account(self,response):
             hidden_datasets= response.css('script[type="application/json"][data-sjs]::text').getall()
@@ -71,9 +62,8 @@ class ThreadsScraper(scrapy.Spider):
                 threads = [self.parse_thread(t) for thread in thread_items for t in thread]
                 return {
                     # the first parsed thread is the main post:
-                    "thread": threads[0],
+                    "thread": threads,
                     # other threads are replies:
-                    "replies": threads[1:],
                 }
             raise ValueError("could not find thread data in page")
 

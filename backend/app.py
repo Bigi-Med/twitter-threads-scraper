@@ -9,11 +9,14 @@ from flask_cors import CORS  # Import CORS from flask_cors
 
 app = Flask(__name__) 
 CORS(app)
+scrapy_project_path = os.path.join(os.path.dirname(__file__),'scraper','twitterthreads')
+output_file_path = os.path.join(scrapy_project_path,'profile.json')
 
 @app.route("/")
 def index():
     profile = request.args.get('profile')
-    print(profile)
+    print("Executing spider .....")
+    subprocess.run(['scrapy','crawl','ThreadsScraper','-o',output_file_path,'-a','profile='+profile],cwd = scrapy_project_path)
     return 'sent'
 
 if __name__ == '__main__': 
