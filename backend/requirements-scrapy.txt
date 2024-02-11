@@ -1,2 +1,4 @@
 Scrapy==2.11.0
 scrapy_fake_useragent==1.4.4
+nested-lookup==0.2.25
+jmespath==1.0.1

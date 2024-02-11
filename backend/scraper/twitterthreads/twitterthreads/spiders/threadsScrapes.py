@@ -1,13 +1,7 @@
 import scrapy
-import time
 from nested_lookup import nested_lookup
 import json
 import  jmespath
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
 class ThreadsScraper(scrapy.Spider):
     name = 'ThreadsScraper'
 
