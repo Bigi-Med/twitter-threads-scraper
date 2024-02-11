@@ -16,7 +16,8 @@ output_file_path = os.path.join(scrapy_project_path,'profile.json')
 def index():
     profile = request.args.get('profile')
     print("Executing spider .....")
-    subprocess.run(['scrapy','crawl','ThreadsScraper','-o',output_file_path,'-a','profile='+profile],cwd = scrapy_project_path)
+    # subprocess.run(['scrapy','crawl','ThreadsScraper','-o',output_file_path,'-a','profile='+profile],cwd = scrapy_project_path)
+    subprocess.run(['scrapy','crawl','ThreadsScraper','-a','profile='+profile],cwd = scrapy_project_path)
 
     with open(output_file_path, 'r', encoding='utf-8') as json_file:
         data = json.load(json_file)

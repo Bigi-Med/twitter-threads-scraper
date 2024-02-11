@@ -7,6 +7,7 @@ export default function Home() {
  const [loading, setLoading] = useState(false)
 
 const downloadThreads = (file) => {
+  console.log('downloading .....')
   const current = new Date()
   const day = current.getDate()
   const month = current.getMonth() +1 
@@ -25,6 +26,7 @@ const downloadThreads = (file) => {
 
 const parseData = (data) => {
   let parsedData = []
+  console.log(data)
   data.forEach(element => { parsedData.push(element.text)
   });
   const cleanQuotes = parsedData.map((quote, index) => ({
@@ -44,7 +46,7 @@ const getThreads = async (profile) => {
     const response = await fetch(fullUrl)
     const data = await response.json()
     setLoading(false)
-    const parsedData = parseData(data[0].thread)
+    const parsedData = parseData(data)
     console.log(parsedData);
     downloadThreads(parsedData)
     }

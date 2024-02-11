@@ -51,9 +51,7 @@ class ThreadsScraper(scrapy.Spider):
                     continue
                 # use our jmespath parser to reduce the dataset to the most important fields
                 threads = [self.parse_thread(t) for thread in thread_items for t in thread]
-                return {
-                    "thread": threads,
-                }
+                file_path = 'profile.json'
+                with open(file_path,'w') as file:
+                    json.dump(threads,file)
             raise ValueError("could not find thread data in page")
-
-
