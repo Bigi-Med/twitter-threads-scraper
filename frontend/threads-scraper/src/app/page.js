@@ -7,8 +7,11 @@ export default function Home() {
  const [loading, setLoading] = useState(false)
 
 const downloadThreads = (file) => {
-  console.log('downloading .....')
-  const fileName = 'data.json'
+  const current = new Date()
+  const day = current.getDate()
+  const month = current.getMonth() +1 
+  const year = current.getFullYear()
+  const fileName = `${profile}-${day}-${month}-${year}.json`
   const jsonStr = JSON.stringify(file,null,2)
 
   let element = document.createElement('a')
@@ -22,7 +25,6 @@ const downloadThreads = (file) => {
 
 const parseData = (data) => {
   let parsedData = []
-  console.log(data)
   data.forEach(element => { parsedData.push(element.text)
   });
   const cleanQuotes = parsedData.map((quote, index) => ({
