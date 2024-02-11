@@ -1,0 +1,4 @@
+Flask==2.3.3
+Flask_cors==4.0.0
+Werkzeug==2.3.7
+gunicorn==21.1.0

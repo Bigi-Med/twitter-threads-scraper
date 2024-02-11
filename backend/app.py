@@ -1,8 +1,6 @@
 # importing libraries 
 from flask import Flask, request
-from flask_mail import Mail, Message 
 import subprocess
-import logging
 import os
 import json
 from flask_cors import CORS  # Import CORS from flask_cors

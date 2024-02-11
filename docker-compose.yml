@@ -1,0 +1,17 @@
+version: '3'
+services:
+  spider:
+    build:
+      context: ./backend    # Dockerfile location for the backend
+    ports:
+      - "5000:5000"  # Map container port 5000 to host port 5000
+    depends_on:
+      - ui
+    mem_reservation: 10g
+    cpu_shares: 4096
+
+  ui:
+    build:
+      context: ./frontend/threads-scraper  # Dockerfile location for the frontend
+    ports:
+      - "3000:3000"  # Map container port 3000 to host port 3000
